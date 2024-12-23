@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:@next/next/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:import/errors",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "plugins": ["prettier", "import", "@typescript-eslint"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "prettier/prettier": ["error"],
+    "import/order": ["error", { "groups": [["builtin", "external", "internal"]] }],
+    "@typescript-eslint/no-unused-vars": ["warn"]
+  }
+}
