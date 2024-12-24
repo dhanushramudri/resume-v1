@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import degreesData from '../stores/degreesData';
 
-const DomainPage = () => {
+const DomainPage = ({ initialData }) => {
   const [selectedDegree, setSelectedDegree] = useState(null);
   const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const router = useRouter();
