@@ -1,3 +1,4 @@
+import { HTMLRenderer } from '@/helpers/common/components/HTMLRenderer';
 import React from 'react';
 
 interface AchievementsProps {
@@ -19,9 +20,7 @@ const Achievements: React.FC<AchievementsProps> = ({ achievements }) => {
   return (
     <div>
       {parsedAchievements.map((achievement, index) => (
-        <div key={index}>
-          <HTMLRenderer htmlString={achievement} />
-        </div>
+        <div key={index}>{achievement && <HTMLRenderer htmlString={achievement} />}</div>
       ))}
     </div>
   );
