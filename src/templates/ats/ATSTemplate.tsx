@@ -57,7 +57,9 @@ export default function TwoColumnTemplate() {
             {skills.languages?.length > 0 && (
               <SkillGroup
                 title="Programming Languages"
-                skills={skills.languages.filter((s) => !['English', 'Telugu'].includes(s.name))}
+                skills={skills.languages.filter(
+                  (s: { name: string }) => !['English', 'Telugu'].includes(s.name)
+                )}
               />
             )}
 
@@ -80,8 +82,8 @@ export default function TwoColumnTemplate() {
           <Section title="Languages">
             <div className="space-y-1">
               {skills.languages
-                ?.filter((lang) => ['English', 'Telugu'].includes(lang.name))
-                .map((lang) => (
+                ?.filter((lang: { name: string }) => ['English', 'Telugu'].includes(lang.name))
+                .map((lang: { name: string }) => (
                   <div key={lang.name} className="text-gray-700">
                     {lang.name}
                   </div>
@@ -128,7 +130,7 @@ export default function TwoColumnTemplate() {
 }
 
 // Section component
-function Section({ title, children }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-6 break-inside-avoid">
       <h3 className="text-lg font-bold text-gray-800 mb-3 uppercase">{title}</h3>
@@ -138,14 +140,19 @@ function Section({ title, children }) {
 }
 
 // SkillGroup component
-function SkillGroup({ title, skills }) {
+interface SkillGroupProps {
+  title: string;
+  skills: { name: string }[];
+}
+
+function SkillGroup({ title, skills }: SkillGroupProps) {
   if (!skills?.length) return null;
 
   return (
     <div className="mb-4">
       <h4 className="text-sm font-semibold text-gray-700 mb-2">{title}</h4>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
+        {skills.map((skill: { name: string }) => (
           <span key={skill.name} className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
             {skill.name}
           </span>

@@ -3,7 +3,7 @@ import { AVAILABLE_TEMPLATES } from '@/helpers/constants';
 import { ITemplate, ITemplateContent } from '@/helpers/constants/index.interface';
 
 interface ITemplateStore {
-  availableTemplate: ITemplate;
+  availableTemplate: { [key: string]: ITemplate };
   activeTemplate: ITemplateContent;
   setTemplate: (template: ITemplateContent) => void;
 }

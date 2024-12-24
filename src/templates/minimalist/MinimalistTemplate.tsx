@@ -19,7 +19,12 @@ const Section = styled.div`
   width: 100%;
 `;
 
-function RatedSkills({ items }) {
+interface Skill {
+  name: string;
+  level: number;
+}
+
+function RatedSkills({ items }: { items: Skill[] }) {
   return (
     <div className="grid grid-cols-3 gap-x-4 gap-y-2">
       {items?.map(({ name, level }) => (
@@ -34,8 +39,13 @@ function RatedSkills({ items }) {
   );
 }
 
-function SocialProfiles({ profiles }) {
-  const socialIcons = {
+interface Profile {
+  network: string;
+  url: string;
+}
+
+function SocialProfiles({ profiles }: { profiles: Profile[] }) {
+  const socialIcons: { [key: string]: string } = {
     github: '🔗',
     linkedin: '🔗',
     twitter: '🔗',
@@ -105,7 +115,7 @@ export default function MinimalistTemplate() {
                 <h3 className="text-sm font-medium mb-1">Programming Languages</h3>
                 <RatedSkills
                   items={skills.languages.filter(
-                    (lang) => !['English', 'Telugu'].includes(lang.name)
+                    (lang: Skill) => !['English', 'Telugu'].includes(lang.name)
                   )}
                 />
               </div>
@@ -123,14 +133,14 @@ export default function MinimalistTemplate() {
             <SectionValidator value={skills.databases}>
               <div>
                 <h3 className="text-sm font-medium mb-1">Databases</h3>
-                <RatedSkills items={skills.databases.filter((db) => db.name)} />
+                <RatedSkills items={skills.databases.filter((db: Skill) => db.name)} />
               </div>
             </SectionValidator>
 
             <SectionValidator value={skills.tools}>
               <div>
                 <h3 className="text-sm font-medium mb-1">Tools</h3>
-                <RatedSkills items={skills.tools.filter((tool) => tool.name)} />
+                <RatedSkills items={skills.tools.filter((tool: Skill) => tool.name)} />
               </div>
             </SectionValidator>
           </div>
@@ -141,7 +151,7 @@ export default function MinimalistTemplate() {
       <SectionValidator value={work}>
         <Section className="mb-4">
           <h2 className="text-lg font-semibold mb-2">Work Experience</h2>
-          {work.map((job, index) => (
+          {work.map((job: any, index: number) => (
             <Section key={job.id || index} className="mb-3">
               <div className="mb-2">
                 <div className="flex justify-between items-start">
@@ -194,15 +204,26 @@ export default function MinimalistTemplate() {
       <SectionValidator value={awards}>
         <Section className="mb-4">
           <h2 className="text-lg font-semibold mb-1">Awards</h2>
-          {awards.map((award) => (
-            <div key={award.id} className="mb-2">
-              <p className="text-sm font-medium">{award.title}</p>
-              <p className="text-xs text-gray-600">
-                {award.awarder} • {award.date}
-              </p>
-              <div className="text-sm mt-0.5" dangerouslySetInnerHTML={{ __html: award.summary }} />
-            </div>
-          ))}
+          {awards.map(
+            (award: {
+              id: string;
+              title: string;
+              awarder: string;
+              date: string;
+              summary: string;
+            }) => (
+              <div key={award.id} className="mb-2">
+                <p className="text-sm font-medium">{award.title}</p>
+                <p className="text-xs text-gray-600">
+                  {award.awarder} • {award.date}
+                </p>
+                <div
+                  className="text-sm mt-0.5"
+                  dangerouslySetInnerHTML={{ __html: award.summary }}
+                />
+              </div>
+            )
+          )}
         </Section>
       </SectionValidator>
     </div>
