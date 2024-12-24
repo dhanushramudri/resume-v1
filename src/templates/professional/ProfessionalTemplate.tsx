@@ -85,7 +85,7 @@ export default function ProfessionalTemplate() {
 
         <SectionValidator value={achievements}>
           <Section title="Certificates and Awards">
-            <Achievements data={achievements} />
+            <Achievements achievements={achievements} />
           </Section>
         </SectionValidator>
       </LeftSection>
