@@ -1,108 +1,156 @@
+import React, { useContext } from 'react';
 import { StateContext } from '../../modules/builder/resume/ResumeLayout';
 import { WorkSection } from '../modern/components/Work';
 import { SkillsSection } from '../modern/components/Skills';
-import { useContext } from 'react';
 import { SectionValidator } from '../../helpers/common/components/ValidSectionRenderer';
 import { EducationSection } from '../modern/components/Education';
-import { Objective } from '../modern/components/Objective';
-import Achievements from '../professional/components/Achievements';
-import Involvement from '../professional/components/Involvement'; // Added Involvement component
+import Involvement from '../professional/components/Involvement';
 
-// Use the StateContext for managing the resume state
-export default function ATSTemplate() {
+export default function TwoColumnTemplate() {
   const resumeData = useContext(StateContext) || {};
-
-  const skills = resumeData.skills || {
-    languages: [],
-    frameworks: [],
-    libraries: [],
-    technologies: [],
-    tools: [],
-  };
-
-  const involvements = resumeData.activities?.involvements || []; // Use activities from resumeData
-  const achievements = resumeData.achievements || [];
-  const fullName = `${resumeData?.basics.firstName} ${resumeData?.basics.lastName}`;
+  const basics = resumeData.basics || {};
+  const skills = resumeData.skills || {};
+  const involvements = resumeData.activities?.involvements || [];
 
   return (
-    <div className=" p-8 max-w-[1000px] mx-auto rounded-lg shadow-xl">
+    <div className="w-full max-w-[1000px] mx-auto bg-white p-6 print:p-4">
       {/* Header Section */}
-      <div>
-        {/* Personal Information */}
-        <h1 className="text-2xl font-semibold">{resumeData.basics.name || ''}</h1>
-        {/* You can add contact details here */}
-      </div>
+      <header className="mb-6 border-b pb-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-1">{basics.name}</h1>
+        {basics.label && <h2 className="text-xl text-gray-700 mb-2">{basics.label}</h2>}
+        <div className="flex flex-wrap gap-4 text-gray-600">
+          {basics.phone && <span>{basics.phone}</span>}
+          {basics.location?.city && <span>{basics.location.city}</span>}
+          {basics.url && <span>{basics.url}</span>}
+        </div>
+      </header>
 
-      <div className="flex flex-col md:flex-row space-y-8 md:space-x-8">
-        {/* Left Column */}
-        <div className="md:w-2/3 space-y-8">
-          {/* Objective Section */}
-          <SectionValidator value={resumeData.objective}>
-            <Section title="Career Objective">
-              <Objective objective={resumeData.objective || ''} />
-            </Section>
-          </SectionValidator>
+      {/* Main Content */}
+      <div className="flex flex-row print:flex-row">
+        {/* Left Column - 70% width */}
+        <div className="w-[70%] pr-6 print:w-[70%] print:pr-6">
+          {/* Professional Summary */}
+          <Section title="Professional Summary">
+            <p className="text-gray-700">{basics.summary}</p>
+          </Section>
 
-          {/* Education Section */}
-          <SectionValidator value={resumeData.education}>
-            <Section title="Education">
-              <EducationSection education={resumeData.education || []} />
-            </Section>
-          </SectionValidator>
+          {/* Work Experience */}
+          <Section title="Professional Experience">
+            <WorkSection experience={resumeData.work || []} />
+          </Section>
 
-          {/* Work Experience Section */}
-          <SectionValidator value={resumeData.work}>
-            <Section title="Work Experience">
-              <WorkSection experience={resumeData.work || []} />
-            </Section>
-          </SectionValidator>
-
-          {/* Key Projects / Involvements Section */}
-          <SectionValidator value={involvements}>
-            <Section title="Key Projects / Involvements">
-              <Involvement data={involvements} />
-            </Section>
-          </SectionValidator>
+          {/* Key Projects */}
+          <Section title="Key Projects">
+            <Involvement data={involvements} />
+          </Section>
         </div>
 
-        {/* Right Column */}
-        <div className="md:w-1/3 space-y-8">
-          {/* Technical Skills Section */}
-          <SectionValidator value={[...skills.languages, ...skills.frameworks]}>
-            <Section title="Languages & Frameworks">
-              <SkillsSection list={[...skills.languages, ...skills.frameworks]} />
-            </Section>
-          </SectionValidator>
+        {/* Right Column - 30% width */}
+        <div className="w-[30%] print:w-[30%] border-l pl-6">
+          {/* Education - Moved to top of right column */}
+          <Section title="Education">
+            <EducationSection education={resumeData.education || []} />
+          </Section>
 
-          <SectionValidator value={[...skills.technologies, ...skills.libraries]}>
-            <Section title="Technologies & Libraries">
-              <SkillsSection list={[...skills.technologies, ...skills.libraries]} />
-            </Section>
-          </SectionValidator>
+          {/* Technical Skills */}
+          <Section title="Technical Skills">
+            {skills.languages?.length > 0 && (
+              <SkillGroup
+                title="Programming Languages"
+                skills={skills.languages.filter((s) => !['English', 'Telugu'].includes(s.name))}
+              />
+            )}
 
-          <SectionValidator value={skills.tools}>
-            <Section title="Tools">
-              <SkillsSection list={skills.tools} />
-            </Section>
-          </SectionValidator>
+            {skills.frameworks?.length > 0 && (
+              <SkillGroup title="Frameworks" skills={skills.frameworks} />
+            )}
 
-          {/* Achievements Section */}
-          <SectionValidator value={achievements}>
-            <Section title="Certificates and Awards">
-              <Achievements data={achievements} />
-            </Section>
-          </SectionValidator>
+            {skills.technologies?.length > 0 && (
+              <SkillGroup title="Technologies" skills={skills.technologies} />
+            )}
+
+            {skills.databases?.length > 0 && (
+              <SkillGroup title="Databases" skills={skills.databases} />
+            )}
+
+            {skills.tools?.length > 0 && <SkillGroup title="Tools" skills={skills.tools} />}
+          </Section>
+
+          {/* Languages */}
+          <Section title="Languages">
+            <div className="space-y-1">
+              {skills.languages
+                ?.filter((lang) => ['English', 'Telugu'].includes(lang.name))
+                .map((lang) => (
+                  <div key={lang.name} className="text-gray-700">
+                    {lang.name}
+                  </div>
+                ))}
+            </div>
+          </Section>
         </div>
       </div>
+
+      {/* Print-specific styles */}
+      <style jsx global>{`
+        @media print {
+          @page {
+            margin: 0.5in;
+            size: letter portrait;
+          }
+
+          body {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+
+          /* Force two-column layout in print */
+          .print\\:flex-row {
+            display: flex !important;
+            flex-direction: row !important;
+          }
+
+          .print\\:w-\\[70\\%\\] {
+            width: 70% !important;
+          }
+
+          .print\\:w-\\[30\\%\\] {
+            width: 30% !important;
+          }
+
+          .print\\:pr-6 {
+            padding-right: 1.5rem !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
+// Section component
 function Section({ title, children }) {
   return (
-    <div>
-      <h2 className="text-xl font-semibold">{title}</h2>
+    <div className="mb-6 break-inside-avoid">
+      <h3 className="text-lg font-bold text-gray-800 mb-3 uppercase">{title}</h3>
       <div>{children}</div>
+    </div>
+  );
+}
+
+// SkillGroup component
+function SkillGroup({ title, skills }) {
+  if (!skills?.length) return null;
+
+  return (
+    <div className="mb-4">
+      <h4 className="text-sm font-semibold text-gray-700 mb-2">{title}</h4>
+      <div className="flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <span key={skill.name} className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
+            {skill.name}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

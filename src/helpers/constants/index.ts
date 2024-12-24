@@ -61,7 +61,7 @@ export const AVAILABLE_TEMPLATES: { [key: string]: ITemplate } = {
   elegant: {
     id: 'elegant',
     name: 'Elegant Template',
-    thumbnail: '/templates/creative.png',
+    thumbnail: '/templates/elegant.png',
     component: dynamic(() => import('@/templates/elegant/ElegantTemplate'), {
       ssr: false,
     }),

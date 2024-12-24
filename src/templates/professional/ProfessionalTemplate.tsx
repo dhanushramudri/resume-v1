@@ -46,6 +46,7 @@ const RightSection = styled.div`
 
 export default function ProfessionalTemplate() {
   const resumeData = useContext(StateContext) || {};
+  console.log('resumedata of languages:', resumeData.skills.languages);
   const skills = resumeData.skills || {
     languages: [],
     frameworks: [],
