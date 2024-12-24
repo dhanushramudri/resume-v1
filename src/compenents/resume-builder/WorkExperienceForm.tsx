@@ -132,7 +132,7 @@ const WorkExperienceForm = () => {
             <div>
               <label className="block text-sm font-medium mb-1">Highlights</label>
               <textarea
-                value={job.highlights.join('\n')}
+                value={job.highlights?.join('\n')}
                 onChange={(e) =>
                   updateWorkExperience(index, 'highlights', e.target.value.split('\n'))
                 }
