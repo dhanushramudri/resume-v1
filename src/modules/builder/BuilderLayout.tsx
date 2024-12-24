@@ -6,7 +6,11 @@ import ResumeHeader from './resume/components/ResumeHeader';
 import { ResumeLayout } from './resume/ResumeLayout';
 import Tooltip from '@mui/material/Tooltip';
 
-const BuilderLayout = () => {
+interface BuilderLayoutProps {
+  degree: string | string[];
+  specialization: string | string[];
+}
+const BuilderLayout: React.FC<BuilderLayoutProps> = ({ degree, specialization }) => {
   return (
     // <div className="flex flex-col min-h-screen">
     //   {/* Navbar */}

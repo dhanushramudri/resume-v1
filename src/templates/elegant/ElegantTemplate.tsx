@@ -20,7 +20,12 @@ const PageSection = styled.div`
   break-inside: avoid;
 `;
 
-function RatedSkills({ items }) {
+interface Skill {
+  name: string;
+  level: number;
+}
+
+function RatedSkills({ items }: { items: Skill[] }) {
   return (
     <div className="space-y-3">
       {items?.map(({ name, level }) => (
@@ -38,8 +43,8 @@ function RatedSkills({ items }) {
   );
 }
 
-function ProfileLinks({ profiles }) {
-  const socialIcons = {
+function ProfileLinks({ profiles }: { profiles: { network: string; url: string }[] }) {
+  const socialIcons: { [key: string]: string } = {
     github: '📚',
     linkedin: '💼',
     twitter: '🐦',
@@ -62,7 +67,7 @@ function ProfileLinks({ profiles }) {
               className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900"
             >
               <span className="flex-shrink-0">
-                {socialIcons[profile.network.toLowerCase()] || '🔗'}
+                {socialIcons[profile.network.toLowerCase() as string] || '🔗'}
               </span>
               <span className="capitalize truncate">{profile.network}</span>
             </a>
@@ -113,7 +118,7 @@ export default function ElegantTemplate() {
                   <h3 className="text-md font-semibold mb-3">Programming</h3>
                   <RatedSkills
                     items={skills.languages.filter(
-                      (lang) => !['English', 'Telugu'].includes(lang.name)
+                      (lang: { name: string }) => !['English', 'Telugu'].includes(lang.name)
                     )}
                   />
                 </div>
@@ -129,7 +134,7 @@ export default function ElegantTemplate() {
               <SectionValidator value={skills.databases}>
                 <div>
                   <h3 className="text-md font-semibold mb-3">Databases</h3>
-                  <RatedSkills items={skills.databases.filter((db) => db.name)} />
+                  <RatedSkills items={skills.databases.filter((db: { name: string }) => db.name)} />
                 </div>
               </SectionValidator>
             </div>
@@ -142,7 +147,9 @@ export default function ElegantTemplate() {
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold mb-4">Languages</h2>
               <RatedSkills
-                items={skills.languages.filter((lang) => ['English', 'Telugu'].includes(lang.name))}
+                items={skills.languages.filter((lang: { name: string }) =>
+                  ['English', 'Telugu'].includes(lang.name)
+                )}
               />
             </div>
           </SectionValidator>
@@ -154,17 +161,25 @@ export default function ElegantTemplate() {
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold mb-4">Education</h2>
               <div className="space-y-4">
-                {education.map((edu) => (
-                  <div key={edu.institution} className="text-sm">
-                    <p className="font-medium">
-                      {edu.studyType} - {edu.area}
-                    </p>
-                    <p className="text-gray-600">{edu.institution}</p>
-                    <p className="text-gray-500 text-xs">
-                      {edu.startDate} - {edu.endDate}
-                    </p>
-                  </div>
-                ))}
+                {education.map(
+                  (edu: {
+                    institution: string;
+                    studyType: string;
+                    area: string;
+                    startDate: string;
+                    endDate: string;
+                  }) => (
+                    <div key={edu.institution} className="text-sm">
+                      <p className="font-medium">
+                        {edu.studyType} - {edu.area}
+                      </p>
+                      <p className="text-gray-600">{edu.institution}</p>
+                      <p className="text-gray-500 text-xs">
+                        {edu.startDate} - {edu.endDate}
+                      </p>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </SectionValidator>
@@ -198,24 +213,32 @@ export default function ElegantTemplate() {
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold mb-4">Professional Experience</h2>
               <div className="space-y-6">
-                {work.map((job) => (
-                  <div key={job.company} className="text-sm">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-medium text-gray-900">{job.company}</h3>
-                        <p className="text-gray-600">{job.position}</p>
+                {work.map(
+                  (job: {
+                    company: string;
+                    position: string;
+                    startDate: string;
+                    endDate?: string;
+                    highlights: string[];
+                  }) => (
+                    <div key={job.company} className="text-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-medium text-gray-900">{job.company}</h3>
+                          <p className="text-gray-600">{job.position}</p>
+                        </div>
+                        <p className="text-gray-500 text-xs">
+                          {job.startDate} - {job.endDate || 'present'}
+                        </p>
                       </div>
-                      <p className="text-gray-500 text-xs">
-                        {job.startDate} - {job.endDate || 'present'}
-                      </p>
+                      <ul className="list-disc list-outside ml-4 space-y-1 text-gray-700">
+                        {job.highlights.map((highlight: string, index: number) => (
+                          <li key={index}>{highlight}</li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="list-disc list-outside ml-4 space-y-1 text-gray-700">
-                      {job.highlights.map((highlight, index) => (
-                        <li key={index}>{highlight}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           </SectionValidator>
@@ -227,9 +250,11 @@ export default function ElegantTemplate() {
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
               <h2 className="text-lg font-semibold mb-3">Key Projects & Achievements</h2>
               <div className="text-sm space-y-2 text-gray-700">
-                {activities.involvements.split('<br/>').map((involvement, index) => (
-                  <p key={index}>{involvement.trim()}</p>
-                ))}
+                {activities.involvements
+                  .split('<br/>')
+                  .map((involvement: string, index: number) => (
+                    <p key={index}>{involvement.trim()}</p>
+                  ))}
               </div>
             </div>
           </SectionValidator>
@@ -242,9 +267,11 @@ export default function ElegantTemplate() {
               <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
                 <h2 className="text-lg font-semibold mb-3">Certifications</h2>
                 <div className="text-sm space-y-2 text-gray-700">
-                  {activities.achievements.split('<br/>').map((achievement, index) => (
-                    <p key={index}>{achievement.trim()}</p>
-                  ))}
+                  {activities.achievements
+                    .split('<br/>')
+                    .map((achievement: string, index: number) => (
+                      <p key={index}>{achievement.trim()}</p>
+                    ))}
                 </div>
               </div>
             </SectionValidator>
@@ -253,14 +280,16 @@ export default function ElegantTemplate() {
               <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
                 <h2 className="text-lg font-semibold mb-3">Awards</h2>
                 <div className="space-y-3">
-                  {awards.map((award) => (
-                    <div key={award.id} className="text-sm">
-                      <p className="font-medium text-gray-900">{award.title}</p>
-                      <p className="text-xs text-gray-600">
-                        {award.awarder} • {award.date}
-                      </p>
-                    </div>
-                  ))}
+                  {awards.map(
+                    (award: { id: string; title: string; awarder: string; date: string }) => (
+                      <div key={award.id} className="text-sm">
+                        <p className="font-medium text-gray-900">{award.title}</p>
+                        <p className="text-xs text-gray-600">
+                          {award.awarder} • {award.date}
+                        </p>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </SectionValidator>
