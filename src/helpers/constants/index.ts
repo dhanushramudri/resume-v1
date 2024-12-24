@@ -74,11 +74,10 @@ export const AVAILABLE_TEMPLATES: { [key: string]: ITemplate } = {
       ssr: false,
     }),
   },
-
   deedy: {
     id: 'deedy',
     name: 'Deedy Resume',
-    thumbnail: '/templates/deedy.png', // Add the appropriate thumbnail path
+    thumbnail: '/templates/deedy.png',
     component: dynamic(() => import('@/templates/deedy/DeedyTemplate'), {
       ssr: false,
     }),
