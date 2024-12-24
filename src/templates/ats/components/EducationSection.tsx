@@ -1,6 +1,14 @@
 import { SectionHeading } from '../atoms/SectionHeading';
 import { SectionItem } from '../atoms/SectionItem';
 
+interface EducationItem {
+  degree: string;
+  field: string;
+  institution: string;
+  startDate: string;
+  endDate: string;
+}
+
 export const EducationSection = ({ education }: { education: EducationItem[] }) => (
   <div>
     <SectionHeading title="Education" />
