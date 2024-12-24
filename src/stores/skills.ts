@@ -6,12 +6,22 @@ import userDetailsData from '@/functions/userDetails';
 import { GetState, SetState } from './store.interface';
 import { ISkillItem, ISkillState } from './skill.interface';
 
+type SkillKeys =
+  | 'languages'
+  | 'frameworks'
+  | 'technologies'
+  | 'libraries'
+  | 'databases'
+  | 'practices'
+  | 'tools';
+
 // Helper method to handle missing or undefined data
-const getFallbackSkills = (key: string) => {
+const getFallbackSkills = (key: SkillKeys) => {
   const userSkills = userDetailsData?.resumeData?.skills?.[key];
   return userSkills || resumeData.skills[key]; // Fallback to resumeData if userSkills is missing
 };
 
+// Define individual methods
 const addSkill =
   (set: SetState<ISkillState>) =>
   ({ name, level }: ISkillItem) =>
@@ -44,6 +54,7 @@ const getSkills = (get: GetState<ISkillState>) => () => (get().isEnabled ? get()
 const setIsEnabled = (set: SetState<ISkillState>) => (isEnabled: boolean) =>
   set(() => ({ isEnabled }));
 
+// Helper to generate methods
 const getMethods = (set: SetState<ISkillState>, get: GetState<ISkillState>) => ({
   get: getSkills(get),
   add: addSkill(set),
@@ -53,6 +64,7 @@ const getMethods = (set: SetState<ISkillState>, get: GetState<ISkillState>) => (
   setIsEnabled: setIsEnabled(set),
 });
 
+// Create stores for different skill categories
 export const useLanguages = create<ISkillState>()(
   persist(
     (set, get) => ({
